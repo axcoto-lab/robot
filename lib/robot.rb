@@ -43,13 +43,17 @@ module Robot
     end
 
     # Report robot statistic
-    def report
+    def report(navigator)
       if ARGV[1] == 'fancy'
-        @reporter ||= Reporter::Fancy.new self
+        @reporter ||= Reporter::Fancy.new
       else
-        @reporter ||= Reporter::Simple.new self
+        @reporter ||= Reporter::Simple.new
       end
-      @reporter.report
+      @reporter.report navigator
+    end
+
+    def pos
+      [pos_x, pos_y]
     end
   end
 end
