@@ -62,13 +62,13 @@ module Robot
             if history = navigator.went_in(x, y) # && !history.nil?
               case history[:direction]
               when 'n'
-                print Color.blue(SIGN_MOVE_S)
-              when 's'
                 print Color.blue(SIGN_MOVE_N)
+              when 's'
+                print Color.blue(SIGN_MOVE_S)
               when 'w'
-                print Color.blue(SIGN_MOVE_E)
-              when 'e'
                 print Color.blue(SIGN_MOVE_W)
+              when 'e'
+                print Color.blue(SIGN_MOVE_E)
               end
               print " "
               next
