@@ -16,6 +16,10 @@ module Robot
       end
     end
 
+    def out_of_bound?(x,y)
+      x < 0 || y < 0 || x >= width || y >= height
+    end
+
     def dirt?(x, y)
       @dirt_map.include?([x, y])
     end

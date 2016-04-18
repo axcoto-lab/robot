@@ -1,9 +1,14 @@
+require_relative 'reporter/base'
+require_relative 'reporter/simple'
+require_relative 'reporter/fancy'
+
 module Robot
   class Robot
     attr_accessor :pos_x, :pos_y
     attr_reader :init_position
     attr_reader :total_dust
     attr_reader :map
+    attr_reader :step
 
     def initialize(map, pos)
       @init_position = pos
@@ -13,30 +18,20 @@ module Robot
 
       @total_dust = 0
 
+      # setup step function
+      @step = {
+        n: -> { @pos_y += 1 if !map.out_of_bound?(@pos_x, @pos_y + 1) },
+        s: -> { @pos_y -= 1 if !map.out_of_bound?(@pos_x, @pos_y - 1) },
+        e: -> { @pos_x += 1 if !map.out_of_bound?(@pos_x + 1, @pos_y) },
+        w: -> { @pos_x -= 1 if !map.out_of_bound?(@pos_x - 1, @pos_y) },
+      }
+
       # Inital cleanup if robot is sit right in place has dirt
       work
     end
 
     def move(direction)
-      case direction.downcase
-      when 'n'
-        if pos_y < (map.height - 1)
-          @pos_y += 1
-        end
-      when 's'
-        if pos_y > 0
-          @pos_y -= 1 
-        end
-      when 'e'
-        if pos_x < (map.width - 1)
-          @pos_x += 1 
-        end
-      when 'w'
-        if pos_x > 0
-          @pos_x -= 1 
-        end
-      end
-
+      step[direction.downcase.to_sym].call
       work
     end
 
@@ -49,9 +44,12 @@ module Robot
 
     # Report robot statistic
     def report
-      puts "#{pos_x} #{pos_y}"
-
-      puts total_dust
+      if ARGV[1] == 'fancy'
+        @reporter ||= Reporter::Fancy.new self
+      else
+        @reporter ||= Reporter::Simple.new self
+      end
+      @reporter.report
     end
   end
 end

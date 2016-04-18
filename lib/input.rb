@@ -9,7 +9,8 @@ module Robot
     attr_reader :file
     attr_reader :size, :drive_path, :dirts, :position
 
-    def initialize(file)
+    def initialize(file = 'input.txt')
+      file = 'input.txt' if file.nil?
       @file = file
 
       @size = []
@@ -23,9 +24,14 @@ module Robot
     private
     def read
       lines = []
+      begin
       File.open(file, 'r') do |f|
         lines = f.each_line.map { |l| l.strip }
         f.close
+      end
+      rescue
+        puts "Error read file #{file}"
+        exit 1
       end
 
       @size = read_size(lines.first)
