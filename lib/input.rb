@@ -23,19 +23,17 @@ module Robot
     private
     def read
       lines = []
-      puts file
-      File.readlines(file) do |line|
-        lines << line.strip
+      File.open(file, 'r') do |f|
+        lines = f.each_line.map { |l| l.strip }
+        f.close
       end
 
-      puts lines
-      exit
-
       @size = read_size(lines.first)
+
       @position = read_position(lines[1])
 
       if drive_path_line?(lines.last)
-        @drive_path = lines.lasts.split('')
+        @drive_path = lines.last.split('')
       end
 
       lines[2..-2].each do | line|
@@ -43,18 +41,12 @@ module Robot
           @dirts << pos
         end
       end
-
-      @map = Array.new[@size[0]].map do |m|
-        Array.new[@size[1]].map do |n|
-          @dirts.include?([m, n])
-        end
-      end
     end
 
-    def read_dirt_position(line)
+    def read_dirt_position(data)
       data = data.strip.split(/\s+/)
       if data.length == 2
-        data
+        data.map(&:to_i)
       else
         nil
       end
@@ -65,7 +57,7 @@ module Robot
       if data.length != 2
         raise InvalidPositionError , "Position needs 2 element"
       end
-      data
+      data.map(&:to_i)
     end
 
     def read_size(data)
@@ -73,12 +65,12 @@ module Robot
       if data.length != 2
         raise InvalidSizeError, "Size needs 2 element"
       end
-      data
+      data.map(&:to_i)
     end
 
     # drive_path line starts with string
     def drive_path_line?(line)
-      0 == line[0]
+      0 == line[0].to_i
     end
   end
 end

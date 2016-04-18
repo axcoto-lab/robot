@@ -7,6 +7,8 @@ require_relative 'lib/robot.rb'
 require_relative 'lib/runner.rb'
 require_relative 'lib/map.rb'
 require_relative 'lib/navigator.rb'
+require_relative 'lib/accumulator.rb'
+require 'pp'
 
 if $PROGRAM_NAME.split('/').last == 'robot.rb'
   Robot.run
