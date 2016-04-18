@@ -1,5 +1,6 @@
 module Robot
 
+  class InvalidFileError < Error; end
   class InvalidSizeError < Error; end
   class InvalidDrivePathError < Error; end
   class InvalidPositionError < Error; end
@@ -25,13 +26,12 @@ module Robot
     def read
       lines = []
       begin
-      File.open(file, 'r') do |f|
-        lines = f.each_line.map { |l| l.strip }
-        f.close
-      end
+        File.open(file, 'r') do |f|
+          lines = f.each_line.map { |l| l.strip }
+          f.close
+        end
       rescue
-        puts "Error read file #{file}"
-        exit 1
+        raise InvalidFileError, "Error read file #{file}"
       end
 
       @size = read_size(lines.first)
